@@ -6369,45 +6369,96 @@
                   , T = Z("tabs_list")
                   , le = Z("new_tab_button");
                 let f = null
-                  , z = -1
-                  , P = []
-                  , j = null;
-                function ee() {
-                    let A = P[z];
-                    A && (S.value = A.frame.url ? A.frame.url.href : S.value)
+                  , z = []
+                  , P = 0
+                  , j = null
+                  , ee = null;
+                function te(A) {
+                    A.frame.url && A.frame.url.href ? A.title = "sandstone://home" === A.frame.url.href ? "Home" : A.frame.url.hostname || A.frame.url.href : A.title || (A.title = "New Tab"),
+                    A.button.textContent = A.title
                 }
-                function te() {
-                    for (let A = 0; A < P.length; A++) {
-                        let g = P[A];
-                        g.button.classList.toggle("active", A === z)
+                function ne() {
+                    for (let A of z)
+                        A.button.classList.toggle("active", ee === A.id)
+                }
+                async function re(A) {
+                    if (!A || ee === A.id)
+                        return;
+                    if (ee) {
+                        let A = z.find((A => A.id === ee));
+                        A && (A.frame.iframe.style.display = "none")
                     }
-                }
-                function ne(A) {
-                    let g = P[A];
+                    ee = A.id,
+                    f = A.frame,
+                    globalThis.main_frame = f,
+                    A.frame.iframe.style.display = "block",
+                    ne(),
+                    S.value = A.frame.url ? A.frame.url.href : S.value,
+                    H.style.display = "none",
+                    r.style.display = "initial";
+                    let g;
+                    try {
+                        g = await A.frame.get_favicon()
+                    } catch (A) {
+                        return
+                    }
                     if (!g)
                         return;
-                    let B = g.label || "New Tab";
-                    g.frame.url && g.frame.url.href && ("sandstone://home" === g.frame.url.href ? B = "Home" : B = g.frame.url.hostname || g.frame.url.href),
-                    g.button.textContent = B
-                }
-                function re(A) {
-                    if (A < 0 || A >= P.length || A === z)
-                        return;
-                    z >= 0 && P[z] && (P[z].frame.iframe.style.display = "none"),
-                    z = A,
-                    f = P[z].frame,
-                    globalThis.main_frame = f,
-                    P[z].frame.iframe.style.display = "block",
-                    te(),
-                    H.style.display = "none",
-                    r.style.display = "initial",
-                    ee(),
-                    async function(A) {
-                        if (!A || !A.url)
+                    if (!g.startsWith("data:")) {
+                        let A = await k.fetch(g);
+                        if (!A.ok)
                             return;
+                        let B = await A.blob();
+                        g = URL.createObjectURL(B)
+                    }
+                    ee === A.id && (H.src = g,
+                    H.style.display = "initial",
+                    r.style.display = "none")
+                }
+                async function oe() {
+                    if (!f)
+                        return;
+                    let A = S.value;
+                    A.startsWith("http:") || A.startsWith("https:") || A.startsWith("sandstone:") || (S.value = "https://" + A),
+                    await f.navigate_to(S.value)
+                }
+                function ie() {
+                    let A = {
+                        id: ++P,
+                        frame: new U.ProxyFrame,
+                        button: document.createElement("button"),
+                        title: "New Tab"
+                    };
+                    return A.button.className = "tab_button",
+                    A.button.textContent = A.title,
+                    A.button.onclick = () => {
+                        re(A)
+                    }
+                    ,
+                    T.append(A.button),
+                    A.frame.iframe.style.display = "none",
+                    W.append(A.frame.iframe),
+                    A.frame.special_pages = {
+                        "sandstone://home": null
+                    },
+                    j && (A.frame.special_pages["sandstone://home"] = j),
+                    A.frame.on_navigate = () => {
+                        te(A),
+                        ee === A.id && (S.value = A.frame.url.href,
+                        H.style.display = "none",
+                        r.style.display = "initial")
+                    }
+                    ,
+                    A.frame.on_url_change = () => {
+                        te(A),
+                        ee === A.id && A.frame.url && (S.value = A.frame.url.href)
+                    }
+                    ,
+                    A.frame.on_load = async () => {
+                        te(A);
                         let g;
                         try {
-                            g = await A.get_favicon()
+                            g = await A.frame.get_favicon()
                         } catch (A) {
                             return
                         }
@@ -6420,74 +6471,15 @@
                             let B = await A.blob();
                             g = URL.createObjectURL(B)
                         }
-                        P[z] && P[z].frame === A && (H.src = g,
-                        H.style.display = "initial",
-                        r.style.display = "none")
-                    }(f)
-                }
-                async function oe() {
-                    let A = S.value;
-                    if (!f)
-                        return;
-                    A.startsWith("http:") || A.startsWith("https:") || A.startsWith("sandstone:") || (S.value = "https://" + A),
-                    await f.navigate_to(S.value)
-                }
-                function ie() {
-                    let A = new U.ProxyFrame
-                      , g = document.createElement("button");
-                    g.className = "tab_button",
-                    g.textContent = "New Tab",
-                    g.onclick = () => {
-                        re(P.findIndex((B => B.frame === A)))
-                    }
-                    ,
-                    T.append(g),
-                    A.iframe.style.display = "none",
-                    W.append(A.iframe),
-                    A.special_pages = {
-                        "sandstone://home": null
-                    },
-                    j && (A.special_pages["sandstone://home"] = j);
-                    let B = {
-                        frame: A,
-                        button: g,
-                        label: "New Tab"
-                    };
-                    P.push(B),
-                    A.on_navigate = () => {
-                        let g = P.findIndex((g => g.frame === A));
-                        ne(g),
-                        g === z && (S.value = A.url.href,
-                        H.style.display = "none",
-                        r.style.display = "initial")
-                    }
-                    ,
-                    A.on_load = async () => {
-                        let g = P.findIndex((g => g.frame === A));
-                        ne(g);
-                        let B = await A.get_favicon();
-                        if (!B.startsWith("data:")) {
-                            let A = await k.fetch(B);
-                            if (!A.ok)
-                                return;
-                            let g = await A.blob();
-                            B = URL.createObjectURL(g)
-                        }
-                        g === z && (S.value = A.url.href,
-                        H.src = B,
+                        ee === A.id && (S.value = A.frame.url.href,
+                        H.src = g,
                         H.style.display = "initial",
                         r.style.display = "none")
                     }
                     ,
-                    A.on_url_change = () => {
-                        let g = P.findIndex((g => g.frame === A));
-                        ne(g),
-                        g === z && (S.value = A.url.href)
-                    }
-                    ;
-                    let Q = P.length - 1;
-                    return re(Q),
-                    Q
+                    z.push(A),
+                    re(A),
+                    A
                 }
                 function v() {
                     K.style.display = "none" === K.style.display ? "flex" : "none",
@@ -6531,9 +6523,9 @@
                         A.getElementById("main_img").src = g,
                         A.getElementById("sandstone_version").textContent = p.textContent;
                         let B = "<!DOCTYPE html>" + A.documentElement.outerHTML;
-                        for (let A of P)
-                            A.frame.special_pages["sandstone://home"] = B;
-                        j = B
+                        j = B;
+                        for (let A of z)
+                            A.frame.special_pages["sandstone://home"] = j
                     }(),
                     b.onclick = oe,
                     le.onclick = async () => {
@@ -6547,6 +6539,7 @@
                     }
                     ,
                     ie(),
+                    S.value = location.hash ? location.hash.substring(1) : "sandstone://home",
                     await oe(),
                     W.style.backgroundColor = "unset"
                 }()
