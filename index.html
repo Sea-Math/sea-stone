@@ -133,6 +133,30 @@
                 text-overflow: ellipsis;
             }
 
+            .tab_button_inner {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .tab_title {
+                flex-grow: 1;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .tab_close {
+                border: 0px;
+                background: transparent;
+                color: #b8bcc7;
+                cursor: pointer;
+                padding: 0px;
+                width: 16px;
+                height: 16px;
+                font-size: 13px;
+                line-height: 1;
+            }
+
             .tab_button.active {
                 background: #242935;
                 border-color: #4a79ff;
@@ -157,7 +181,7 @@
                 <p id="favicon_text" style="display: none;">...</p>
                 <img id="favicon_img" width="24px" height="24px">
             </div>
-            <input id="url_box" type="text" placeholder="Enter URL here..." value="sandstone://home">
+            <input id="url_box" type="text" placeholder="Enter URL here..." value="seastone://home">
             <button id="navigate_button">Submit</button>
             <button id="options_button">Options</button>
         </div>
@@ -187,6 +211,6 @@
                 </a>
             </p>
         </div>
-        <script src="index.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/Sea-Math/sea-stone@main/prosy.js"></script>
     </body>
 </html>
