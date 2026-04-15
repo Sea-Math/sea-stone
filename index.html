@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <base href="https://cdn.jsdelivr.net/gh/Sea-Math/sea-stone/">
-        <title>Sandstone</title>
+        <base href="https://cdn.jsdelivr.net/gh/sea-bean-unblocked/sandstone-gn/">
+        <title>Sea Stone</title>
         <link rel="icon" type="image/png" href="image.png">
         <style>
             * {
@@ -19,6 +20,8 @@
                 display: flex;
                 flex-direction: column;
                 overflow: hidden;
+                background: #101113;
+                color: #d7d9dd;
             }
 
             a, a:hover, a:visited, a:active {
@@ -53,11 +56,18 @@
 
             #address_bar {
                 display: flex;
-                height: 26px;
+                height: 34px;
+                padding: 6px;
+                gap: 6px;
+                background: #181a1f;
+                border-bottom: 1px solid #2b2f38;
             }
 
             #address_bar * {
-                border-radius: 1px;
+                border-radius: 8px;
+                border: 1px solid #2b2f38;
+                background: #111319;
+                color: #d7d9dd;
             }
 
             #close_options_button {
@@ -67,6 +77,7 @@
 
             #url_box {
                 flex-grow: 1;
+                padding: 0px 10px;
             }
 
             #frame_container {
@@ -83,11 +94,64 @@
             #favicon_container {
                 width: 24px;
                 text-align: center;
-                border: 1px solid black;
+                border: 1px solid #2b2f38;
+                background: #111319;
+            }
+
+            #tabs_bar {
+                height: 38px;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 6px;
+                background: #14161b;
+                border-bottom: 1px solid #2b2f38;
+            }
+
+            #tabs_list {
+                display: flex;
+                gap: 6px;
+                overflow-x: auto;
+                flex-grow: 1;
+            }
+
+            .tab_button, #new_tab_button, #navigate_button, #options_button {
+                border: 1px solid #2b2f38;
+                background: #111319;
+                color: #d7d9dd;
+                cursor: pointer;
+            }
+
+            .tab_button {
+                min-width: 130px;
+                max-width: 220px;
+                padding: 7px 10px;
+                border-radius: 10px;
+                text-align: left;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .tab_button.active {
+                background: #242935;
+                border-color: #4a79ff;
+            }
+
+            #new_tab_button {
+                width: 34px;
+                height: 30px;
+                border-radius: 10px;
+                font-size: 18px;
+                line-height: 1;
             }
         </style>
     </head>
     <body>
+        <div id="tabs_bar">
+            <div id="tabs_list"></div>
+            <button id="new_tab_button" title="New tab">+</button>
+        </div>
         <div id="address_bar">
             <div id="favicon_container">
                 <p id="favicon_text" style="display: none;">...</p>
@@ -118,7 +182,7 @@
             <p id="version_p" style="font-size: 14px;">
                 <a href="https://github.com/ading2210/sandstone" target="_blank">
                     <i>
-                        Sandstone <span id="version_text"></span>
+                        Sea Stone <span id="version_text"></span>
                     </i>
                 </a>
             </p>
