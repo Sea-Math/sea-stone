@@ -6352,7 +6352,7 @@
                   , k = Q.GB
                   , d = Q.Nm
                   , J = Q.rE;
-                const L = '<!DOCTYPE html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8">\n    <meta name="viewport" content="width=device-width">\n    <title>Sea Stone Homepage</title>\n    <link rel="icon" type="image/png" href="/resources/logo_128.png">\n    <style>\n      :root {\n        --background-1: #0C0C0D;\n        --background-2: #18181A;\n        --border-1: #2c2726;\n        --text-color: #cccccc;\n      }\n      * {\n        box-sizing: border-box;\n      }\n      html, body {\n        height: 100%;\n        font-family: Arial, sans-serif;\n        margin: 0px;\n        background-color: var(--background-1);\n        color: var(--text-color);\n        border-color: var(--text-color);\n      }\n      body {\n        display: flex;\n        width: 100%;\n        flex-direction: column;\n        align-items: center;\n      }\n      a, a:visited, a:hover, a:active {\n        color: inherit;\n      }\n      #footer {\n        position: absolute;\n        display: flex;\n        align-items: end;\n        bottom: 8px;\n        left: 0px;\n        width: 100%;\n        padding-left: 8px;\n        padding-right: 8px;\n      }\n      #footer a, #footer p {\n        font-size: 12px;\n        text-decoration: none;\n        margin: 0px;\n        margin-top: 4px;\n      }\n      #header_div {\n        display: flex;\n        align-items: center;\n        gap: 24px;\n        width: min(400px, 100%);\n        margin-bottom: 24px;\n      }\n      #search_form {\n        display: flex;\n        gap: 4px;\n        width: min(400px, 100%);\n      }\n      #search_button {\n        width: 60px;\n      } \n      #search_form * {\n        color: var(--text-color);\n        background-color: var(--background-2);\n        padding: 8px;\n        border: 1px var(--border-1) solid;\n      }\n      .spacer {\n        flex-grow: 1;\n      }\n    </style>\n  </head>\n  <body>\n    <div class="spacer"></div>\n    <div id="header_div">\n      <img src="/resources/logo_128.png" width="128px" height="128px" id="main_img">\n      <h1>Sea Stone</h1>\n    </div>\n    <form id="search_form" action="https://www.startpage.com/sp/search" method="get">\n      <input id="search_box" class="spacer" type="text" placeholder="Search the web..." name="query">\n      <input id="search_button" type="submit" value="Submit">\n    </form>\n    <div class="spacer"></div>\n    \n    <div id="footer">\n      <div>\n        <p><a href="https://github.com/Sea-Math/sea-stone">Sea Stone <span id="seastone_version">v0.0.0</span></a></p>\n        <p>Tip: You can save this page as an "HTML only" file and the proxy will still work.</p>\n      </div>\n      <div class="spacer"></div>\n      <div style="text-align: right;">\n        <p>Source code: <a href="https://github.com/Sea-Math/sea-stone">https://github.com/Sea-Math/sea-stone</a></p>\n        <p><a href="https://github.com/Sea-Math/sea-stone/blob/main/LICENSE">Copyright &copy; 2025 ading2210. Licensed under the GNU AGPL v3.</a></p>\n      </div>\n    </div>\n  </body>\n</html>'
+                const L = '<!DOCTYPE html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8">\n    <meta name="viewport" content="width=device-width">\n    <title>Sea Stone Homepage</title>\n    <link rel="icon" type="image/png" href="/resources/logo_128.png">\n    <style>\n      :root {\n        --background-1: #090B11;\n        --background-2: #121826;\n        --border-1: #2d3b5a;\n        --text-color: #d7e4ff;\n      }\n      * {\n        box-sizing: border-box;\n      }\n      html, body {\n        height: 100%;\n        font-family: Arial, sans-serif;\n        margin: 0px;\n        background-color: var(--background-1);\n        color: var(--text-color);\n        border-color: var(--text-color);\n      }\n      body {\n        display: flex;\n        width: 100%;\n        flex-direction: column;\n        align-items: center;\n      }\n      a, a:visited, a:hover, a:active {\n        color: inherit;\n      }\n      #footer {\n        position: absolute;\n        display: flex;\n        align-items: end;\n        bottom: 8px;\n        left: 0px;\n        width: 100%;\n        padding-left: 8px;\n        padding-right: 8px;\n      }\n      #footer a, #footer p {\n        font-size: 12px;\n        text-decoration: none;\n        margin: 0px;\n        margin-top: 4px;\n      }\n      #header_div {\n        display: flex;\n        align-items: center;\n        gap: 18px;\n        width: min(560px, 100%);\n        margin-bottom: 16px;\n        padding: 18px;\n        border: 1px solid var(--border-1);\n        border-radius: 16px;\n        background: linear-gradient(180deg, rgba(26,35,58,.68), rgba(16,22,38,.68));\n        backdrop-filter: blur(4px);\n      }\n      #search_form {\n        display: flex;\n        gap: 8px;\n        width: min(560px, 100%);\n      }\n      #search_button {\n        width: 92px;\n        font-weight: 600;\n      } \n      #search_form * {\n        color: var(--text-color);\n        background-color: var(--background-2);\n        padding: 10px 12px;\n        border: 1px var(--border-1) solid;\n        border-radius: 12px;\n      }\n      .spacer {\n        flex-grow: 1;\n      }\n    </style>\n  </head>\n  <body>\n    <div class="spacer"></div>\n    <div id="header_div">\n      <img src="/resources/logo_128.png" width="128px" height="128px" id="main_img">\n      <div><h1 style="margin:0">Sea Stone</h1><p style="margin:6px 0 0;opacity:.8">Scramjet-style launcher for quick private browsing</p></div>\n    </div>\n    <form id="search_form" action="https://www.startpage.com/sp/search" method="get">\n      <input id="search_box" class="spacer" type="text" placeholder="Search the web..." name="query">\n      <input id="search_button" type="submit" value="Submit">\n    </form>\n    <div class="spacer"></div>\n    \n    <div id="footer">\n      <div>\n        <p><a href="https://github.com/Sea-Math/sea-stone">Sea Stone <span id="seastone_version">v0.0.0</span></a></p>\n        <p>Tip: You can save this page as an "HTML only" file and the proxy will still work.</p>\n      </div>\n      <div class="spacer"></div>\n      <div style="text-align: right;">\n        <p>Source code: <a href="https://github.com/Sea-Math/sea-stone">https://github.com/Sea-Math/sea-stone</a></p>\n        <p><a href="https://github.com/Sea-Math/sea-stone/blob/main/LICENSE">Copyright &copy; 2025 ading2210. Licensed under the GNU AGPL v3.</a></p>\n      </div>\n    </div>\n  </body>\n</html>'
                   , Z = A => document.getElementById(A)
                   , H = Z("favicon_img")
                   , r = Z("favicon_text")
@@ -6379,7 +6379,7 @@
                 const pe = new Map
                   , qe = new Set;
                 let _e = 0;
-                const ce = "https://html.duckduckgo.com/html/"
+                const ce = "seastone://home"
                   , se = "seastone://settings"
                   , de = "wss://military.marincareers.org/wisp/"
                   , he = "sea_stone_wisp_url"
@@ -6511,7 +6511,7 @@
                     return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Sea Stone Settings</title><style>body{font-family:Arial,sans-serif;padding:16px;background:#0f1115;color:#ddd}input,button,select{padding:8px;border-radius:8px;border:1px solid #2b2f38;background:#161922;color:#ddd}form{display:flex;gap:8px;margin-top:10px}a{color:#9db8ff}</style></head><body><h2>Sea Stone Settings</h2><p>Set websocket URL:</p><form action="seastone://set-wisp" method="get"><input name="url" value="${V.value}" style="flex-grow:1"/><button type="submit">Save</button></form><p style="margin-top:12px">Set transport mode:</p><form action="seastone://set-transport" method="get"><select name="mode" style="flex-grow:1"><option value="wisp"${"wisp" === A ? " selected" : ""}>Wisp (default)</option><option value="wsproxy"${"wsproxy" === A ? " selected" : ""}>WSProxy (fallback)</option></select><button type="submit">Apply</button></form><p><a href="${ce}">Back to home</a></p></body></html>`
                 }
                 function te(A) {
-                    A.frame.url && A.frame.url.href ? A.title = ce === A.frame.url.href ? "DuckDuckGo" : se === A.frame.url.href ? "Settings" : A.frame.url.hostname || A.frame.url.href : A.title || (A.title = "New Tab"),
+                    A.frame.url && A.frame.url.href ? A.title = ce === A.frame.url.href ? "Home" : se === A.frame.url.href ? "Settings" : A.frame.url.hostname || A.frame.url.href : A.title || (A.title = "New Tab"),
                     A.button.querySelector(".tab_title").textContent = A.title
                 }
                 function xe(A) {
@@ -6662,7 +6662,8 @@
                     A.frame.iframe.style.display = "none",
                     W.append(A.frame.iframe),
                     A.frame.special_pages = {
-                        [se]: ae()
+                        [se]: ae(),
+                        [ce]: j || L
                     },
                     A.frame.on_navigate = () => {
                         te(A),
@@ -6706,6 +6707,7 @@
                     let A = Pe ? Pe.value : Me();
                     Ne(A);
                     for (let A of z)
+                        A.frame.special_pages[ce] = j || L,
                         A.frame.special_pages[se] = ae()
                 }
                 globalThis.seastone = g,
@@ -6764,6 +6766,7 @@
                         let B = "<!DOCTYPE html>" + A.documentElement.outerHTML;
                         j = B;
                         for (let A of z)
+                            A.frame.special_pages[ce] = j,
                             A.frame.special_pages[se] = ae()
                     }(),
                     b.onclick = oe,
