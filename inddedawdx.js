@@ -6518,6 +6518,18 @@
                     A && (URL.revokeObjectURL(A),
                     qe.delete(A))
                 }
+                function Ue(A) {
+                    return new Promise(( (g, B) => {
+                        let Q = new FileReader;
+                        Q.onload = () => {
+                            g(Q.result)
+                        }
+                        ,
+                        Q.onerror = B,
+                        Q.readAsDataURL(A)
+                    }
+                    ))
+                }
                 async function Te(A) {
                     if (!A)
                         return null;
@@ -6535,13 +6547,12 @@
                         ))]);
                         if (!g || !g.ok)
                             return null;
-                        let B = URL.createObjectURL(await g.blob())
+                        let B = await Ue(await g.blob())
                           , Q = {
                             src: B,
-                            object_url: B
+                            object_url: null
                         };
                         return pe.set(A, Q),
-                        qe.add(B),
                         Q
                     } catch (A) {
                         return null
@@ -6714,8 +6725,6 @@
                 globalThis.sandstone = g,
                 async function() {
                     window.addEventListener("beforeunload", ( () => {
-                        for (let A of qe)
-                            URL.revokeObjectURL(A);
                         qe.clear(),
                         pe.clear()
                     }
