@@ -80,6 +80,34 @@
                 padding: 0px 10px;
             }
 
+            #bookmark_button {
+                width: 34px;
+                font-size: 16px;
+                line-height: 1;
+            }
+
+            #bookmarks_bar {
+                min-height: 36px;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 6px;
+                background: #111319;
+                border-bottom: 1px solid #2b2f38;
+                overflow-x: auto;
+            }
+
+            .bookmark_chip {
+                border: 1px solid #2b2f38;
+                background: #1a1e27;
+                color: #d7d9dd;
+                border-radius: 999px;
+                padding: 5px 10px;
+                cursor: pointer;
+                white-space: nowrap;
+                font-size: 12px;
+            }
+
             #frame_container {
                 flex-grow: 1;
                 background-color: #222222;
@@ -182,9 +210,11 @@
                 <img id="favicon_img" width="24px" height="24px">
             </div>
             <input id="url_box" type="text" placeholder="Enter URL here..." value="https://html.duckduckgo.com/html/">
+            <button id="bookmark_button" title="Toggle bookmark">★</button>
             <button id="navigate_button">Submit</button>
             <button id="options_button">Options</button>
         </div>
+        <div id="bookmarks_bar"></div>
         <div id="frame_container"></div>
         <div id="options_div" style="display: none;">
             <div style="display: flex;">

@@ -6358,7 +6358,9 @@
                   , r = Z("favicon_text")
                   , b = Z("navigate_button")
                   , S = Z("url_box")
+                  , Oe = Z("bookmark_button")
                   , W = Z("frame_container")
+                  , BeBar = Z("bookmarks_bar")
                   , p = Z("version_text")
                   , m = Z("options_button")
                   , K = Z("options_div")
@@ -6373,11 +6375,15 @@
                   , P = 0
                   , j = null
                   , ee = null;
+                const pe = new Map
+                  , qe = new Set;
+                let _e = 0;
                 const ce = "https://html.duckduckgo.com/html/"
                   , se = "sandstone://settings"
                   , de = "wss://military.marincareers.org/wisp/"
                   , he = "sea_stone_wisp_url"
-                  , fe = [de, "wss://wisp.mercurywork.shop/wisp/", "wss://wisp.dinorepl.co/wisp/"];
+                  , fe = [de, "wss://wisp.mercurywork.shop/wisp/", "wss://wisp.dinorepl.co/wisp/"]
+                  , Ae = "sea_stone_bookmarks";
                 let ge = 0;
                 function me() {
                     let A = localStorage.getItem(he);
@@ -6393,6 +6399,85 @@
                     for (let A of g)
                         A && !B.includes(A) && B.push(A);
                     return B
+                }
+                function Be() {
+                    let A = location.hash ? location.hash.substring(1) : "";
+                    if (!A)
+                        return "";
+                    try {
+                        return decodeURIComponent(A)
+                    } catch (g) {
+                        return A
+                    }
+                }
+                function Qe(A) {
+                    if (!A)
+                        return;
+                    let g = "#" + encodeURIComponent(A);
+                    location.hash !== g && (location.hash = g)
+                }
+                function Ie() {
+                    try {
+                        let A = JSON.parse(localStorage.getItem(Ae) || "[]");
+                        return Array.isArray(A) ? A.filter((A => "string" == typeof A && A)) : []
+                    } catch (A) {
+                        return []
+                    }
+                }
+                function Ce(A) {
+                    let g = Array.isArray(A) ? A.slice(0, 20) : [];
+                    localStorage.setItem(Ae, JSON.stringify(g))
+                }
+                function Ee(A=ce) {
+                    try {
+                        return new URL(A).hostname || A
+                    } catch (g) {
+                        return A
+                    }
+                }
+                function De() {
+                    if (!BeBar)
+                        return;
+                    BeBar.innerHTML = "";
+                    let A = Ie();
+                    if (!A.length) {
+                        let A = document.createElement("span");
+                        A.textContent = "No bookmarks yet. Press ★ to save this page.",
+                        A.style.fontSize = "12px",
+                        A.style.opacity = "0.75",
+                        BeBar.append(A);
+                        return
+                    }
+                    for (let g of A) {
+                        let A = document.createElement("button");
+                        A.className = "bookmark_chip",
+                        A.textContent = Ee(g),
+                        A.title = g,
+                        A.onclick = async () => {
+                            S.value = g,
+                            await oe()
+                        }
+                        ,
+                        BeBar.append(A)
+                    }
+                }
+                function oe_toggle_bookmark() {
+                    let A = Ie()
+                      , g = S.value || ce
+                      , B = A.includes(g);
+                    B ? A = A.filter((A => A !== g)) : A.unshift(g),
+                    A = [...new Set(A)],
+                    Ce(A),
+                    De(),
+                    Re()
+                }
+                function Re() {
+                    if (!Oe)
+                        return;
+                    let A = S.value || ce
+                      , g = Ie().includes(A);
+                    Oe.style.opacity = g ? "1" : "0.65",
+                    Oe.textContent = g ? "★" : "☆"
                 }
                 function be(A=!1) {
                     let g = ve();
@@ -6412,6 +6497,43 @@
                     A.frame.url && A.frame.url.href ? A.title = ce === A.frame.url.href ? "DuckDuckGo" : se === A.frame.url.href ? "Settings" : A.frame.url.hostname || A.frame.url.href : A.title || (A.title = "New Tab"),
                     A.button.querySelector(".tab_title").textContent = A.title
                 }
+                function xe(A) {
+                    A && (URL.revokeObjectURL(A),
+                    qe.delete(A))
+                }
+                async function Te(A) {
+                    if (!A)
+                        return null;
+                    if (A.startsWith("data:"))
+                        return {
+                            src: A,
+                            object_url: null
+                        };
+                    if (pe.has(A))
+                        return pe.get(A);
+                    try {
+                        let g = await Promise.race([k.fetch(A), new Promise(( (A, g) => {
+                            setTimeout(( () => g(Error("favicon fetch timeout"))), 3500)
+                        }
+                        ))]);
+                        if (!g || !g.ok)
+                            return null;
+                        let B = URL.createObjectURL(await g.blob())
+                          , Q = {
+                            src: B,
+                            object_url: B
+                        };
+                        return pe.set(A, Q),
+                        qe.add(B),
+                        Q
+                    } catch (A) {
+                        return null
+                    }
+                }
+                function we(A, g) {
+                    A && A.favicon_object_url && A.favicon_object_url !== g && xe(A.favicon_object_url),
+                    A.favicon_object_url = g || null
+                }
                 function ne() {
                     for (let A of z)
                         A.button.classList.toggle("active", ee === A.id)
@@ -6429,6 +6551,7 @@
                     A.frame.iframe.style.display = "block",
                     ne(),
                     S.value = A.frame.url ? A.frame.url.href : S.value,
+                    Re(),
                     H.style.display = "none",
                     r.style.display = "initial";
                     let g;
@@ -6439,33 +6562,29 @@
                     }
                     if (!g)
                         return;
-                    if (!g.startsWith("data:")) {
-                        let A = await k.fetch(g);
-                        if (!A.ok)
-                            return;
-                        let B = await A.blob();
-                        g = URL.createObjectURL(B)
-                    }
-                    ee === A.id && (H.src = g,
+                    let B = await Te(g);
+                    B && ee === A.id && (we(A, B.object_url),
+                    H.src = B.src,
                     H.style.display = "initial",
                     r.style.display = "none")
                 }
                 async function oe() {
                     if (!f)
                         return;
-                    let A = S.value;
-                    "seastone://home" === A && (A = ce),
-                    "seastone://settings" === A && (A = se),
-                    A.startsWith("sandstone://set-wisp") && (A = function(A) {
+                    let A = ++_e;
+                    let g = S.value;
+                    "seastone://home" === g && (g = ce),
+                    "seastone://settings" === g && (g = se),
+                    g.startsWith("sandstone://set-wisp") && (g = function(A) {
                         let g = new URL(A.replace("sandstone://", "https://sandstone.local/"))
                           , B = g.searchParams.get("url");
                         return B && (k.set_websocket(B),
                         V.value = B,
                         ye(B)),
                         se
-                    }(A)),
-                    S.value = A,
-                    A.startsWith("http:") || A.startsWith("https:") || A.startsWith("sandstone:") || (S.value = "https://" + A),
+                    }(g)),
+                    S.value = g,
+                    g.startsWith("http:") || g.startsWith("https:") || g.startsWith("sandstone:") || (S.value = "https://" + g),
                     await async function() {
                         try {
                             await f.navigate_to(S.value)
@@ -6476,6 +6595,9 @@
                             await f.navigate_to(S.value)
                         }
                     }()
+                    ,
+                    A === _e && Qe(S.value),
+                    Re()
                 }
                 function ue(A) {
                     if (z.length <= 1)
@@ -6484,6 +6606,7 @@
                     if (-1 === g)
                         return;
                     let B = z[g];
+                    we(B, null),
                     B.frame.iframe.remove(),
                     B.button.remove(),
                     z.splice(g, 1),
@@ -6522,12 +6645,14 @@
                         te(A),
                         ee === A.id && (S.value = A.frame.url.href,
                         H.style.display = "none",
-                        r.style.display = "initial")
+                        r.style.display = "initial",
+                        Re())
                     }
                     ,
                     A.frame.on_url_change = () => {
                         te(A),
-                        ee === A.id && A.frame.url && (S.value = A.frame.url.href)
+                        ee === A.id && A.frame.url && (S.value = A.frame.url.href,
+                        Re())
                     }
                     ,
                     A.frame.on_load = async () => {
@@ -6540,17 +6665,13 @@
                         }
                         if (!g)
                             return;
-                        if (!g.startsWith("data:")) {
-                            let A = await k.fetch(g);
-                            if (!A.ok)
-                                return;
-                            let B = await A.blob();
-                            g = URL.createObjectURL(B)
-                        }
-                        ee === A.id && (S.value = A.frame.url.href,
-                        H.src = g,
+                        let B = await Te(g);
+                        B && ee === A.id && (we(A, B.object_url),
+                        S.value = A.frame.url.href,
+                        H.src = B.src,
                         H.style.display = "initial",
-                        r.style.display = "none")
+                        r.style.display = "none",
+                        Re())
                     }
                     ,
                     z.push(A),
@@ -6564,11 +6685,20 @@
                 }
                 globalThis.sandstone = g,
                 async function() {
-                    location.hash && (S.value = location.hash.substring(1));
+                    window.addEventListener("beforeunload", ( () => {
+                        for (let A of qe)
+                            URL.revokeObjectURL(A);
+                        qe.clear(),
+                        pe.clear()
+                    }
+                    )),
+                    Be() && (S.value = Be());
                     let A = me();
                     V.value = A,
                     be(!1),
                     p.textContent = `v${J.ver} (${J.hash})`,
+                    De(),
+                    Re(),
                     m.onclick = async () => {
                         S.value = se,
                         await oe()
@@ -6583,6 +6713,7 @@
                         f && f.eval_js(X.value)
                     }
                     ,
+                    Oe && (Oe.onclick = oe_toggle_bookmark),
                     await async function() {
                         let A = (new DOMParser).parseFromString(L, "text/html")
                           , g = document.querySelector("link[rel='icon']").href;
@@ -6619,7 +6750,7 @@
                     }
                     ,
                     ie(),
-                    S.value = location.hash ? location.hash.substring(1) : ce,
+                    S.value = Be() || ce,
                     await oe(),
                     W.style.backgroundColor = "unset"
                 }()
