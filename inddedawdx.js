@@ -6373,6 +6373,9 @@
                   , P = 0
                   , j = null
                   , ee = null;
+                const pe = new Map
+                  , qe = new Set;
+                let _e = 0;
                 const ce = "https://html.duckduckgo.com/html/"
                   , se = "sandstone://settings"
                   , de = "wss://military.marincareers.org/wisp/"
@@ -6412,6 +6415,43 @@
                     A.frame.url && A.frame.url.href ? A.title = ce === A.frame.url.href ? "DuckDuckGo" : se === A.frame.url.href ? "Settings" : A.frame.url.hostname || A.frame.url.href : A.title || (A.title = "New Tab"),
                     A.button.querySelector(".tab_title").textContent = A.title
                 }
+                function xe(A) {
+                    A && (URL.revokeObjectURL(A),
+                    qe.delete(A))
+                }
+                async function Te(A) {
+                    if (!A)
+                        return null;
+                    if (A.startsWith("data:"))
+                        return {
+                            src: A,
+                            object_url: null
+                        };
+                    if (pe.has(A))
+                        return pe.get(A);
+                    try {
+                        let g = await Promise.race([k.fetch(A), new Promise(( (A, g) => {
+                            setTimeout(( () => g(Error("favicon fetch timeout"))), 3500)
+                        }
+                        ))]);
+                        if (!g || !g.ok)
+                            return null;
+                        let B = URL.createObjectURL(await g.blob())
+                          , Q = {
+                            src: B,
+                            object_url: B
+                        };
+                        return pe.set(A, Q),
+                        qe.add(B),
+                        Q
+                    } catch (A) {
+                        return null
+                    }
+                }
+                function we(A, g) {
+                    A && A.favicon_object_url && A.favicon_object_url !== g && xe(A.favicon_object_url),
+                    A.favicon_object_url = g || null
+                }
                 function ne() {
                     for (let A of z)
                         A.button.classList.toggle("active", ee === A.id)
@@ -6439,33 +6479,29 @@
                     }
                     if (!g)
                         return;
-                    if (!g.startsWith("data:")) {
-                        let A = await k.fetch(g);
-                        if (!A.ok)
-                            return;
-                        let B = await A.blob();
-                        g = URL.createObjectURL(B)
-                    }
-                    ee === A.id && (H.src = g,
+                    let B = await Te(g);
+                    B && ee === A.id && (we(A, B.object_url),
+                    H.src = B.src,
                     H.style.display = "initial",
                     r.style.display = "none")
                 }
                 async function oe() {
                     if (!f)
                         return;
-                    let A = S.value;
-                    "seastone://home" === A && (A = ce),
-                    "seastone://settings" === A && (A = se),
-                    A.startsWith("sandstone://set-wisp") && (A = function(A) {
+                    let A = ++_e;
+                    let g = S.value;
+                    "seastone://home" === g && (g = ce),
+                    "seastone://settings" === g && (g = se),
+                    g.startsWith("sandstone://set-wisp") && (g = function(A) {
                         let g = new URL(A.replace("sandstone://", "https://sandstone.local/"))
                           , B = g.searchParams.get("url");
                         return B && (k.set_websocket(B),
                         V.value = B,
                         ye(B)),
                         se
-                    }(A)),
-                    S.value = A,
-                    A.startsWith("http:") || A.startsWith("https:") || A.startsWith("sandstone:") || (S.value = "https://" + A),
+                    }(g)),
+                    S.value = g,
+                    g.startsWith("http:") || g.startsWith("https:") || g.startsWith("sandstone:") || (S.value = "https://" + g),
                     await async function() {
                         try {
                             await f.navigate_to(S.value)
@@ -6476,6 +6512,8 @@
                             await f.navigate_to(S.value)
                         }
                     }()
+                    ,
+                    A === _e && location.hash !== "#" + S.value && (location.hash = S.value)
                 }
                 function ue(A) {
                     if (z.length <= 1)
@@ -6484,6 +6522,7 @@
                     if (-1 === g)
                         return;
                     let B = z[g];
+                    we(B, null),
                     B.frame.iframe.remove(),
                     B.button.remove(),
                     z.splice(g, 1),
@@ -6540,15 +6579,10 @@
                         }
                         if (!g)
                             return;
-                        if (!g.startsWith("data:")) {
-                            let A = await k.fetch(g);
-                            if (!A.ok)
-                                return;
-                            let B = await A.blob();
-                            g = URL.createObjectURL(B)
-                        }
-                        ee === A.id && (S.value = A.frame.url.href,
-                        H.src = g,
+                        let B = await Te(g);
+                        B && ee === A.id && (we(A, B.object_url),
+                        S.value = A.frame.url.href,
+                        H.src = B.src,
                         H.style.display = "initial",
                         r.style.display = "none")
                     }
@@ -6564,6 +6598,13 @@
                 }
                 globalThis.sandstone = g,
                 async function() {
+                    window.addEventListener("beforeunload", ( () => {
+                        for (let A of qe)
+                            URL.revokeObjectURL(A);
+                        qe.clear(),
+                        pe.clear()
+                    }
+                    )),
                     location.hash && (S.value = location.hash.substring(1));
                     let A = me();
                     V.value = A,
