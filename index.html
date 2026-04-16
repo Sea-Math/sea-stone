@@ -80,6 +80,34 @@
                 padding: 0px 10px;
             }
 
+            #bookmark_button {
+                width: 34px;
+                font-size: 16px;
+                line-height: 1;
+            }
+
+            #bookmarks_bar {
+                min-height: 36px;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 6px;
+                background: #111319;
+                border-bottom: 1px solid #2b2f38;
+                overflow-x: auto;
+            }
+
+            .bookmark_chip {
+                border: 1px solid #2b2f38;
+                background: #1a1e27;
+                color: #d7d9dd;
+                border-radius: 999px;
+                padding: 5px 10px;
+                cursor: pointer;
+                white-space: nowrap;
+                font-size: 12px;
+            }
+
             #frame_container {
                 flex-grow: 1;
                 background-color: #222222;
@@ -182,9 +210,11 @@
                 <img id="favicon_img" width="24px" height="24px">
             </div>
             <input id="url_box" type="text" placeholder="Enter URL here..." value="https://html.duckduckgo.com/html/">
+            <button id="bookmark_button" title="Toggle bookmark">★</button>
             <button id="navigate_button">Submit</button>
             <button id="options_button">Options</button>
         </div>
+        <div id="bookmarks_bar"></div>
         <div id="frame_container"></div>
         <div id="options_div" style="display: none;">
             <div style="display: flex;">
@@ -197,6 +227,13 @@
                 <input id="wisp_url_input" type="text" style="flex-grow: 1">
             </div>
             <div style="display: flex; gap: 8px;">
+                <label for="transport_mode_select">Transport:</label>
+                <select id="transport_mode_select" style="flex-grow: 1">
+                    <option value="wisp">Wisp (default)</option>
+                    <option value="wsproxy">WSProxy (fallback)</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 8px;">
                 <p style="font-size: 16px;">Eval JS:</p>
                 <div style="flex-grow: 1"></div>
                 <button id="eval_js_button">Run</button>
@@ -204,7 +241,7 @@
             <textarea id="eval_js_input"></textarea>
             <div style="flex-grow: 1"></div>
             <p id="version_p" style="font-size: 14px;">
-                <a href="https://github.com/ading2210/sandstone" target="_blank">
+                <a href="https://github.com/Sea-Math/sea-stone" target="_blank">
                     <i>
                         Sea Stone <span id="version_text"></span>
                     </i>
