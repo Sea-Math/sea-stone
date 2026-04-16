@@ -6383,7 +6383,10 @@
                   , de = "wss://military.marincareers.org/wisp/"
                   , he = "sea_stone_wisp_url"
                   , fe = [de, "wss://wisp.mercurywork.shop/wisp/", "wss://wisp.dinorepl.co/wisp/"]
-                  , Ae = "sea_stone_bookmarks";
+                  , Ae = "sea_stone_bookmarks"
+                  , Pe = ["/libcurl/index.mjs", "https://cdn.jsdelivr.net/gh/Sea-Math/sail@main/libcurl/index.mjs", "https://cdn.jsdelivr.net/gh/Sea-Math/sail@main/libcurl/index.js", "https://cdn.jsdelivr.net/gh/Sea-Math/sail@main/libcurl/index.cjs", "https://github.com/Sea-Math/sail/blob/main/libcurl/index.cjs", "https://github.com/Sea-Math/sail/blob/main/libcurl/index.js", "https://github.com/Sea-Math/sail/blob/main/libcurl/index.mjs"]
+                  , je = ["/baremux/index.js", "https://cdn.jsdelivr.net/gh/Sea-Math/sail@main/baremux/index.js", "https://cdn.jsdelivr.net/gh/Sea-Math/sail@main/baremux/index.mjs", "https://github.com/Sea-Math/sail/blob/main/baremux/index.js", "https://github.com/Sea-Math/sail/blob/main/baremux/index.mjs"]
+                  , Me = ["/baremux/worker.js", "https://cdn.jsdelivr.net/gh/Sea-Math/sail@main/baremux/worker.js", "https://github.com/Sea-Math/sail/blob/main/baremux/worker.js"];
                 let ge = 0;
                 function me() {
                     let A = localStorage.getItem(he);
@@ -6478,6 +6481,56 @@
                       , g = Ie().includes(A);
                     Oe.style.opacity = g ? "1" : "0.65",
                     Oe.textContent = g ? "★" : "☆"
+                }
+                function O(A) {
+                    return A.includes("github.com/") && A.includes("/blob/") ? A.replace("https://github.com/", "https://raw.githubusercontent.com/").replace("/blob/", "/") : A
+                }
+                async function Se(A) {
+                    try {
+                        await new Promise(( (g, B) => {
+                            let Q = document.createElement("script");
+                            Q.src = O(A),
+                            Q.async = !0,
+                            Q.onload = () => g(!0),
+                            Q.onerror = () => B(Error(`failed to load ${A}`)),
+                            document.head.append(Q)
+                        }
+                        ));
+                        return !0
+                    } catch (A) {
+                        return !1
+                    }
+                }
+                async function We() {
+                    if (globalThis.BareMux && globalThis.BareMux.BareMuxConnection)
+                        return !0;
+                    for (let A of je)
+                        if (await Se(A),
+                        globalThis.BareMux && globalThis.BareMux.BareMuxConnection)
+                            return !0;
+                    return !1
+                }
+                async function He() {
+                    if (!await We())
+                        return !1;
+                    let A = globalThis.BareMux.BareMuxConnection;
+                    if (!A)
+                        return !1;
+                    let g = null;
+                    for (let B of Me)
+                        try {
+                            g = new A(O(B));
+                            break
+                        } catch (A) {}
+                    if (!g)
+                        return !1;
+                    for (let A of Pe)
+                        try {
+                            await g.setTransport(O(A)),
+                            globalThis.seastone_transport = g;
+                            return !0
+                        } catch (A) {}
+                    return !1
                 }
                 function be(A=!1) {
                     let g = ve();
@@ -6696,6 +6749,13 @@
                     Be() && (S.value = Be());
                     let A = me();
                     V.value = A,
+                    He().then((A => {
+                        A && console.log("Sea Stone transport bridge ready")
+                    }
+                    )).catch((A => {
+                        console.warn("Sea Stone transport bridge unavailable", A)
+                    }
+                    )),
                     be(!1),
                     p.textContent = `v${J.ver} (${J.hash})`,
                     De(),
