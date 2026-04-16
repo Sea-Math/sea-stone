@@ -6373,13 +6373,43 @@
                   , P = 0
                   , j = null
                   , ee = null;
-                const ce = "sandstone://home"
-                  , se = "sandstone://settings";
+                const ce = "https://html.duckduckgo.com/html/"
+                  , se = "sandstone://settings"
+                  , de = "wss://military.marincareers.org/wisp/"
+                  , he = "sea_stone_wisp_url"
+                  , fe = [de, "wss://wisp.mercurywork.shop/wisp/", "wss://wisp.dinorepl.co/wisp/"];
+                let ge = 0;
+                function me() {
+                    let A = localStorage.getItem(he);
+                    return A && A.startsWith("wss://") ? A : de
+                }
+                function ye(A) {
+                    A && A.startsWith("wss://") && localStorage.setItem(he, A)
+                }
+                function ve() {
+                    let A = V.value && V.value.startsWith("wss://") ? V.value : me()
+                      , g = [A, ...fe]
+                      , B = [];
+                    for (let A of g)
+                        A && !B.includes(A) && B.push(A);
+                    return B
+                }
+                function be(A=!1) {
+                    let g = ve();
+                    if (!g.length)
+                        return null;
+                    A && (ge = (ge + 1) % g.length);
+                    let B = g[ge % g.length];
+                    return k.set_websocket(B),
+                    V.value = B,
+                    ye(B),
+                    B
+                }
                 function ae() {
                     return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Sea Stone Settings</title><style>body{font-family:Arial,sans-serif;padding:16px;background:#0f1115;color:#ddd}input,button{padding:8px;border-radius:8px;border:1px solid #2b2f38;background:#161922;color:#ddd}form{display:flex;gap:8px;margin-top:10px}a{color:#9db8ff}</style></head><body><h2>Sea Stone Settings</h2><p>Set websocket URL:</p><form action="sandstone://set-wisp" method="get"><input name="url" value="${V.value}" style="flex-grow:1"/><button type="submit">Save</button></form><p><a href="${ce}">Back to home</a></p></body></html>`
                 }
                 function te(A) {
-                    A.frame.url && A.frame.url.href ? A.title = ce === A.frame.url.href ? "Home" : se === A.frame.url.href ? "Settings" : A.frame.url.hostname || A.frame.url.href : A.title || (A.title = "New Tab"),
+                    A.frame.url && A.frame.url.href ? A.title = ce === A.frame.url.href ? "DuckDuckGo" : se === A.frame.url.href ? "Settings" : A.frame.url.hostname || A.frame.url.href : A.title || (A.title = "New Tab"),
                     A.button.querySelector(".tab_title").textContent = A.title
                 }
                 function ne() {
@@ -6430,12 +6460,22 @@
                         let g = new URL(A.replace("sandstone://", "https://sandstone.local/"))
                           , B = g.searchParams.get("url");
                         return B && (k.set_websocket(B),
-                        V.value = B),
+                        V.value = B,
+                        ye(B)),
                         se
                     }(A)),
                     S.value = A,
                     A.startsWith("http:") || A.startsWith("https:") || A.startsWith("sandstone:") || (S.value = "https://" + A),
-                    await f.navigate_to(S.value)
+                    await async function() {
+                        try {
+                            await f.navigate_to(S.value)
+                        } catch (A) {
+                            if (console.error("navigate failed; retrying with fallback transport", A),
+                            !be(!0))
+                                throw A;
+                            await f.navigate_to(S.value)
+                        }
+                    }()
                 }
                 function ue(A) {
                     if (z.length <= 1)
@@ -6476,10 +6516,8 @@
                     A.frame.iframe.style.display = "none",
                     W.append(A.frame.iframe),
                     A.frame.special_pages = {
-                        [ce]: null,
                         [se]: ae()
                     },
-                    j && (A.frame.special_pages[ce] = j),
                     A.frame.on_navigate = () => {
                         te(A),
                         ee === A.id && (S.value = A.frame.url.href,
@@ -6520,17 +6558,17 @@
                     A
                 }
                 function v() {
-                    k.set_websocket(V.value);
+                    be(!1);
                     for (let A of z)
                         A.frame.special_pages[se] = ae()
                 }
                 globalThis.sandstone = g,
                 async function() {
                     location.hash && (S.value = location.hash.substring(1));
-                    let A = "wss://military.marincareers.org/wisp/";
-                    k.set_websocket(A),
-                    p.textContent = `v${J.ver} (${J.hash})`,
+                    let A = me();
                     V.value = A,
+                    be(!1),
+                    p.textContent = `v${J.ver} (${J.hash})`,
                     m.onclick = async () => {
                         S.value = se,
                         await oe()
@@ -6567,7 +6605,6 @@
                         let B = "<!DOCTYPE html>" + A.documentElement.outerHTML;
                         j = B;
                         for (let A of z)
-                            A.frame.special_pages[ce] = j,
                             A.frame.special_pages[se] = ae()
                     }(),
                     b.onclick = oe,
